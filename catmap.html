@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Cat Map</title>
+  <style type="text/css">
+    * {
+      padding:0px; margin:0px;
+      border:0px;
+    }
+    body {
+      font-family: Georgia,serif;
+      font-size: 14px;
+    }
+    #title {
+      background-color: #eda;
+    }
+    h1.banner {
+      font-size: 28px;
+      padding-left:0.7em;
+      padding-top: 0.2em;
+      padding-bottom: 0.2em;
+      border-bottom: 1px solid #888;
+      margin:0;
+    }
+    #info {
+      position: absolute;
+      top: 55px;
+      left: 10px;
+      width:300px;
+      padding:0.5em;
+    }
+    #main {
+      position: absolute;
+      top: 55px;
+      left: 340px;
+      max-width: 40em;
+      padding-left:0.5em; padding-right:0.5em;
+      margin-bottom:2em;
+    }
+    h2 {
+      font-size: 21px;
+      padding-bottom: 10px;
+    }
+    .cvnote {
+      padding-top: 10px;
+    }
+    .slidesnote {
+      padding-top: 10px;
+      font-size: 12px;
+    }
+    .softwarelink {
+      font-size: 16px;
+      font-style: italic;
+    }
+    .softwaredesc {
+      padding-top: 5px;
+    }
+    .subsection {
+      padding-bottom: 10px;
+    }
+    img {
+      padding=5px;
+    }
+    p.inset {
+      margin-left: 20px;
+    }
+    div.section {
+      padding-bottom: 15px;
+    }
+    div.panel {
+      margin-left: 10px;
+      margin-bottom: 10px;
+      padding: 15px;
+      padding-left: 25px;
+      border: 1px solid #ddb;
+    }
+    h3 {
+      margin-left: 20px;
+      padding-bottom: 10px;
+      font-size: 16px;
+    }
+    p.doubleinset {
+      margin-left: 40px;
+    }
+    ul {
+      margin-left: 40px;
+    }
+    li {
+      margin-bottom: 8px;
+    }
+  </style>
+        <script>
+            var iterations = 0;
+
+            function docatmap() {
+                var canvas = document.getElementById("myCanvas");
+
+                var h = canvas.height;
+                var w = canvas.width;
+                var ctx = canvas.getContext('2d');
+                var imageData = ctx.getImageData(0, 0, w, h);
+                var data = imageData.data;
+
+                var rim = ctx.createImageData(w, h);
+                var result = rim.data;
+
+                for (var y = 0; y < h; ++y)
+                for (var x = 0; x < w; ++x)
+                {
+                    var xx = (x+y)%w;
+                    var yy = (x+2*y)%h;
+
+                    var ii = (yy * w + xx) * 4;
+                    var r = data[ii];
+                    var g = data[++ii];
+                    var b = data[++ii];
+                    var a = data[++ii];
+
+                    yy = (yy + 1)%h;
+                    ii = (yy * w + xx) * 4;
+                    r += data[ii];
+                    g += data[++ii];
+                    b += data[++ii];
+                    a += data[++ii];
+
+                    xx = (xx + 1)%w;
+                    ii = (yy * w + xx) * 4;
+                    r += data[ii];
+                    g += data[++ii];
+                    b += data[++ii];
+                    a += data[++ii];
+
+                    yy = (yy + 1)%h;
+                    ii = (yy * w + xx) * 4;
+                    r += data[ii];
+                    g += data[++ii];
+                    b += data[++ii];
+                    a += data[++ii];
+
+
+                    var i = (y * w + x) * 4;
+                    result[i]   = r >> 2;  // red
+                    result[++i] = g >> 2;  // green
+                    result[++i] = b >> 2;  // blue
+                    result[++i] = a >> 2;
+                }
+                ctx.putImageData(rim, 0, 0);
+
+                ++iterations;
+                var counter = document.getElementById("iters");
+                counter.innerHTML = iterations.toString();
+            }
+        </script>
+    </head><body>
+
+  <div id="title"><h1 class="banner">Cat Map</h1></div>
+<div id="below">
+</div>
+
+<div id="main">
+        <img id="image" src="catmap_files/happycat.gif" alt="Gandalf the Cat" width="500" height="500" style="display: none">
+        <h2>Click on image to apply cat map.</h2>
+        <p>Iterations = <span id="iters">0</span>.</p>
+        <canvas id="myCanvas" width="500" height="500" style="border:1px solid
+        #d3d3d3;">
+        Your browser does not support the HTML5 canvas tag.</canvas>
+
+        <script>
+
+            var img=document.getElementById("image");
+            img.onload = function() {
+                var img=document.getElementById("image");
+                var c=document.getElementById("myCanvas");
+                var ctx=c.getContext("2d");
+                ctx.drawImage(img,0,0);
+            }
+
+            var c=document.getElementById("myCanvas");
+            c.onmouseup = docatmap; 
+
+        </script>
+
+        <br>
+        <br>
+
+        <h2>Gandalf</h2>
+        <img id="image" src="catmap_files/gandalf.jpg" alt="Gandalf the Cat" width="300" height="300">
+        <p>This is my cat, Gandalf. You can't apply the cat map to him.</p>
+        <br>
+    
+</div>
+
+
+</body></html>
